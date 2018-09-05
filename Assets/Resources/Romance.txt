@@ -1,0 +1,329 @@
+﻿@Information Field
+
+#TITLE Romance
+#ARTIST
+#GENRE
+#PLAYLEVEL 1
+
+@Data Field
+
+Start -> 8 seconds
+Start BPM is 102 -> 102 / 60 = 1.7 -> speed
+Start Position -> 1.7 * (3.9 + 0.25) = 7.31
+
+#Left 7.31 0 102
+#Left 1 0 102
+#Left 1 0 102
+
+#Left 1 0 102
+#Right 1 0 102
+#Left 1 0 102
+
+#Left 1 0 102
+#Down 0 1 102
+#Up 0 1 102
+
+#Up 0 1 102
+#Left 1 0 102
+#Left 1 0 102
+
+#Up 0 1 102
+#Up 0 1 102
+#Up 0 1 102
+
+#Up 0 1 102
+#Down 0 1 102
+#Up 0 1 102
+
+#Up 0 1 102
+#Left 1 0 102
+#Right 1 0 102
+
+#Right 1 0 102
+#Left 1 0 102
+#Up 0 1 102
+
+#Left 1 0 102
+#Up 0 1 102
+#Left 1 0 102
+
+#Left 1 0 102
+#Up 0 1 102
+#Left 1 0 102
+
+#Left 1 0 102
+#Right 1 0 102
+#Left 1 0 102
+
+#Left 1 0 102
+#Down 0 1 102
+#Up 0 1 102
+
+#Down 0 1 102
+#Down 0 1 102
+#Down 0 1 102
+
+#Down 0 1 102
+#Left 1 0 102
+#Down 0 1 102
+
+#Up 0 1 102
+#Up 0 1 102
+#Up 0 1 102
+
+#Up 0 1 102
+
+
+#Left 3 0 102
+#Left 1 0 102
+#Left 1 0 102
+
+#Left 1 0 102
+#Right 1 0 102
+#Left 1 0 102
+
+#Left 1 0 102
+#Down 0 1 102
+#Up 0 1 102
+
+#Up 0 1 102
+#Left 1 0 102
+#Left 1 0 102
+
+#Up 0 1 102
+#Up 0 1 102
+#Up 0 1 102
+
+#Up 0 1 102
+#Down 0 1 102
+#Up 0 1 102
+
+#Up 0 1 102
+#Left 1 0 102
+#Right 1 0 102
+
+#Right 1 0 102
+#Left 1 0 102
+#Up 0 1 102
+
+#Left 1 0 102
+#Up 0 1 102
+#Left 1 0 102
+
+#Left 1 0 102
+#Up 0 1 102
+#Left 1 0 102
+
+#Left 1 0 102
+#Right 1 0 102
+#Left 1 0 102
+
+#Left 1 0 102
+#Down 0 1 102
+#Up 0 1 102
+
+#Down 0 1 102
+#Down 0 1 102
+#Down 0 1 102
+
+#Down 0 1 102
+#Left 1 0 102
+#Down 0 1 102
+
+#Up 0 1 102
+#Up 0 1 102
+#Up 0 1 102
+
+#Up 0 1 102
+
+
+#Up 0 3 102
+#Up 0 1 102
+#Up 0 1 102
+
+#Up 0 1 102
+#Down 0 1 102
+#Up 0 1 102
+
+#Right 1 0 102
+#Up 0 1 102
+#Up 0 1 102
+
+#Up 0 1 102
+#Left 1 0 102
+#Up 0 1 102
+
+#Right 1 0 102
+#Right 1 0 102
+#Right 1 0 102
+
+#Right 1 0 102
+#Left 1 0 102
+#Right 1 0 102
+
+#Right 1 0 102
+#Left 1 0 102
+#Left 1 0 102
+
+#Left 1 0 102
+#Right 1 0 102
+#Left 1 0 102
+
+#Up 0 1 102
+#Up 0 1 102
+#Up 0 1 102
+
+#Up 0 1 102
+#Left 1 0 102
+#Down 0 1 102
+
+#Right 1 0 102
+#Right 1 0 102
+#Right 1 0 102
+
+#Right 1 0 102
+#Left 1 0 102
+#Right 1 0 102
+
+#Up 0 1 102
+#Up 0 1 102
+#Up 0 1 102
+
+#Up 0 1 102
+#Right 1 0 102
+#Down 0 1 102
+
+#Up 0 1 102
+#Up 0 1 102
+#Up 0 1 102
+
+#Up 0 1 102
+
+
+#Up 0 3 102
+#Up 0 1 102
+#Up 0 1 102
+
+#Up 0 1 102
+#Down 0 1 102
+#Up 0 1 102
+
+#Right 1 0 102
+#Up 0 1 102
+#Up 0 1 102
+
+#Up 0 1 102
+#Left 1 0 102
+#Up 0 1 102
+
+#Right 1 0 102
+#Right 1 0 102
+#Right 1 0 102
+
+#Right 1 0 102
+#Left 1 0 102
+#Right 1 0 102
+
+#Right 1 0 102
+#Left 1 0 102
+#Left 1 0 102
+
+#Left 1 0 102
+#Right 1 0 102
+#Left 1 0 102
+
+#Up 0 1 102
+#Up 0 1 102
+#Up 0 1 102
+
+#Up 0 1 102
+#Left 1 0 102
+#Down 0 1 102
+
+#Right 1 0 102
+#Right 1 0 102
+#Right 1 0 102
+
+#Right 1 0 102
+#Left 1 0 102
+#Right 1 0 102
+
+#Up 0 1 102
+#Up 0 1 102
+#Up 0 1 102
+
+#Up 0 1 102
+#Right 1 0 102
+#Down 0 1 102
+
+#Up 0 1 102
+#Up 0 1 102
+#Up 0 1 102
+
+#Up 0 1 102
+
+
+#Down 0 3 96
+
+
+#Left 2 0 96
+#Left 1 0 96
+#Left 1 0 96
+
+#Left 1 0 96
+#Right 1 0 96
+#Left 1 0 96
+
+#Left 1 0 96
+#Down 0 1 96
+#Up 0 1 96
+
+#Up 0 1 96
+#Left 1 0 96
+#Left 1 0 96
+
+#Up 0 1 96
+#Up 0 1 96
+#Up 0 1 96
+
+#Up 0 1 96
+#Down 0 1 96
+#Up 0 1 96
+
+#Up 0 1 96
+#Left 1 0 96
+#Right 1 0 96
+
+#Up 0 1 96
+#Down 0 1 96
+#Left 1 0 96
+
+#Down 0 1 96
+#Left 1 0 96
+#Down 0 1 96
+
+#Down 0 1 88
+#Left 1 0 88
+#Down 0 1 88
+
+#Down 0 1 96
+#Up 0 1 96
+#Down 0 1 96
+
+#Down 0 1 96
+#Right 1 0 96
+#Left 1 0 96
+
+#Right 1 0 96
+#Right 1 0 96
+#Right 1 0 96
+
+#Right 1 0 76
+#Down 0 1 76
+#Right 1 0 76
+
+#Left 1 0 66
+#Left 1 0 66
+#Left 1 0 66
+
+#Left 1 0 66
