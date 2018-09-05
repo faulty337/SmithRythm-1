@@ -699,6 +699,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf0243e0c122253498b6b9e590127ff3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SmithAnimation: {fileID: 1696516271}
+  hammer: {fileID: 7400000, guid: 651f105501d130d419633228318b0db8, type: 3}
 --- !u!65 &479305627
 BoxCollider:
   m_ObjectHideFlags: 0

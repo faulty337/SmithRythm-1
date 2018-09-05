@@ -5,6 +5,14 @@ using RythmData;
 //http://itpangpang.xyz/177 - 유니티 마우스 관련 함수
 //https://blog.naver.com/live_for_dream/220883895920 - 유니티 화면 분할
 
+enum Judge //판정 기준
+{
+    Perfect = 10,
+    Great = 8,
+    Normal = 5,
+    Fail = 0
+}
+
 public class SmithRythm : MonoBehaviour
 {
     AudioSource anvilAudio;
@@ -22,6 +30,9 @@ public class SmithRythm : MonoBehaviour
     float energy; //진행도
     int score; //게임 점수
     int combo;
+
+    public Animation SmithAnimation;
+    public AnimationClip hammer;
 
     // Update is called once per frame
     void Update()
@@ -70,6 +81,11 @@ public class SmithRythm : MonoBehaviour
                 
                 PlayMusic(MyRythm.info.title);
                 gameStart = true;
+
+                SmithAnimation = GameObject.Find("Smith").GetComponent<Animation>();
+                SmithAnimation.clip = hammer;
+                SmithAnimation.Play();
+                gameObject.transform.rotation = Quaternion.Euler(0, 90, 0);
             }
             else
             {
@@ -81,17 +97,17 @@ public class SmithRythm : MonoBehaviour
 
                     if (Input.GetKey(KeyCode.Space))
                     {
-                        string circleName = circleTmp[circleIndex].name;
-                        Vector3 circlePosition = circleTmp[circleIndex].transform.position;
-                        if (circleName.Equals("Left") && -rank <= circlePosition.x ||
-                            circleName.Equals("Right") && circlePosition.x <= rank ||
-                            circleName.Equals("Down") && -rank <= circlePosition.z ||
-                            circleName.Equals("Up") && circlePosition.z <= rank)
+                        Judge temp = JudgeCircle(MULTISPEED / 4f - (rank - MULTISPEED / 4f) / 2, MULTISPEED / 4f, rank);
+
+                        if (temp != Judge.Fail)
                         {
                             //중앙과 가까울 때 클릭하면
                             Destroy(circleTmp[circleIndex++]);
                             combo++;
-                            score += 10 * combo;
+                            score += (int)temp * combo;
+
+                            SmithAnimation.Play();
+                            gameObject.transform.rotation = Quaternion.Euler(0, 90, 0);
                         }
                     }
 
@@ -100,28 +116,22 @@ public class SmithRythm : MonoBehaviour
                         GameObject target = GetClickedObject();
                         if (target != null && target.Equals(gameObject))
                         {
-                            string circleName = circleTmp[circleIndex].name;
-                            Vector3 circlePosition = circleTmp[circleIndex].transform.position;
-                            if (circleName.Equals("Left") && -rank <= circlePosition.x ||
-                                circleName.Equals("Right") && circlePosition.x <= rank ||
-                                circleName.Equals("Down") && -rank <= circlePosition.z ||
-                                circleName.Equals("Up") && circlePosition.z <= rank)
+                            Judge temp = JudgeCircle(MULTISPEED / 4f - (rank - MULTISPEED / 4f) / 2, MULTISPEED / 4f, rank);
+
+                            if (temp != Judge.Fail)
                             {
                                 //중앙과 가까울 때 클릭하면
                                 Destroy(circleTmp[circleIndex++]);
                                 combo++;
-                                score += 10 * combo;
+                                score += (int)temp * combo;
+
+                                SmithAnimation.Play();
+                                gameObject.transform.rotation = Quaternion.Euler(0, 90, 0);
                             }
                         }
                     }
 
-                    string name = circleTmp[circleIndex].name;
-                    Vector3 position = circleTmp[circleIndex].transform.position;
-                    float judge = MULTISPEED / 4f - (rank - MULTISPEED / 4f) / 2;
-                    if (name.Equals("Left") && -judge <= position.x ||
-                        name.Equals("Right") && position.x <= judge ||
-                        name.Equals("Down") && -judge <= position.z ||
-                        name.Equals("Up") && position.z <= judge)
+                    if (JudgeCircle(0, 0, MULTISPEED / 4f - (rank - MULTISPEED / 4f) / 2) != Judge.Fail)
                     {
                         //중앙에 도달했으면 제거
                         Destroy(circleTmp[circleIndex++]);
@@ -145,8 +155,9 @@ public class SmithRythm : MonoBehaviour
                     {
                         //요구 내용 : 아이템 제작 완료 창 및 아이템을 획득 시킬 것
                         //추가해야할 내용 : 경험치 증가 관련
-                        Scenes.Scenes.present = Scenes.Scene.ShowItem;
-                        Scenes.Scenes.ConvertCamera(GameObject.Find("Item Camera"));
+                        //Scenes.Scenes.present = Scenes.Scene.ShowItem;
+
+                        SceneManager.LoadScene("SmithyScene"); //아이템 창 구현 후에 삭제할 것
                     }
                     else
                     {
@@ -158,6 +169,8 @@ public class SmithRythm : MonoBehaviour
                             //죽어서 게임을 나온 경우
                             //GameOver가 나오도록 구현할 것
                         }
+
+                        SceneManager.LoadScene("SmithyScene");
                     }
 
                     Destroy(anvilAudio);
@@ -214,6 +227,40 @@ public class SmithRythm : MonoBehaviour
         anvilAudio.Play();
     }
 
+    Judge JudgeCircle(float min, float mark, float max) //min, max 허용 범위, mark 점수대
+    {
+        if (circleIndex >= circleTmp.Length) return Judge.Fail;
+
+        string name = circleTmp[circleIndex].name;
+        Vector3 position = circleTmp[circleIndex].transform.position;
+        if ((max + mark) / 4f >= GetDistance(name, position) && GetDistance(name, position) >= (min + mark) / 4f)
+        {
+            return Judge.Perfect;
+        }
+        else if ((max + mark) / 2f >= GetDistance(name, position) && GetDistance(name, position) >= (min + mark) / 2f)
+        {
+            return Judge.Great;
+        }
+        else if (max >= GetDistance(name, position))
+        {
+            return Judge.Normal;
+        }
+
+        return Judge.Fail;
+    }
+
+    float GetDistance(string name, Vector3 position)
+    {
+        switch (name)
+        {
+            case "Left": return -position.x;
+            case "Right": return position.x;
+            case "Down": return -position.z;
+            case "Up": return position.z;
+            default: return 0;
+        }
+    }
+
     void MoveCircle(float time)
     {
         for (int i = circleIndex; i < circleTmp.Length; i++)
@@ -260,4 +307,3 @@ public class SmithRythm : MonoBehaviour
         circle.SetPosition(index, firstPoint);
     }
 }
- 
