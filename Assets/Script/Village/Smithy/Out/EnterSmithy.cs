@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EnterSmithy : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class EnterSmithy : MonoBehaviour
         {
             Scenes.Scenes.present = Scenes.Scene.InSmithy;
             StartGame.startPos = GameObject.Find("Main Camera").transform.position;
-            //Smithy Scene를 구성 후 들어가도록 구성할 것
+            SceneManager.LoadScene("SmithyScene");
         }
     }
 }
