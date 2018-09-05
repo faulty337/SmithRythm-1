@@ -155,9 +155,9 @@ public class SmithRythm : MonoBehaviour
                     {
                         //요구 내용 : 아이템 제작 완료 창 및 아이템을 획득 시킬 것
                         //추가해야할 내용 : 경험치 증가 관련
-                        //Scenes.Scenes.present = Scenes.Scene.ShowItem;
-
-                        SceneManager.LoadScene("SmithyScene"); //아이템 창 구현 후에 삭제할 것
+                        Scenes.Scenes.present = Scenes.Scene.ShowItem;
+                        Scenes.Scenes.ConvertCamera(GameObject.Find("Item Camera"));
+                        PlayerData.AddItem(GameData.Getitems()[GameData.GetMusics().IndexOf(MyRythm.info.title)]);
                     }
                     else
                     {

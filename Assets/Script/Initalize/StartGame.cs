@@ -12,6 +12,10 @@ public class StartGame : MonoBehaviour
 
     void Awake()
     {
+        //http://prosto.tistory.com/185 - 화면 비율 조정
+        //http://jungmonster.tistory.com/187
+        //Screen.SetResolution(가로 픽셀, 세로 픽셀, full screen 유무);
+        Screen.SetResolution(Screen.width, (Screen.width * 16) / 9, false);
         Scenes.Scenes.ConvertCamera(GameObject.Find("Main Camera"));
         if (startPos != new Vector3(0, 0, 0)) GameObject.Find("Main Camera").transform.position = startPos;
     }
