@@ -30,10 +30,14 @@ public class EnterRythm : MonoBehaviour
 
     void OnGUI()
     {
+        GUIStyle btnStyle = GUI.skin.button;
+
         if (Scenes.Scenes.present == Scenes.Scene.InSmithy)
         {
-            float BtnWidth = Screen.width / 7f, BtnHeight = Screen.height / 16f; //100, 20 - 대략
-            if (GUI.Button(new Rect(BtnWidth / 10, BtnHeight / 2, BtnWidth, BtnHeight), "나가기"))
+            float btnWidth = Screen.width / 7f, btnHeight = Screen.height / 16f; //100, 20 - 대략
+            btnStyle.fontSize = (int)btnWidth / 8;
+
+            if (GUI.Button(new Rect(btnWidth / 10, btnHeight / 2, btnWidth, btnHeight), "나가기", btnStyle))
             {
                 Scenes.Scenes.present = Scenes.Scene.InVillage;
                 SceneManager.LoadScene("MainScene");
@@ -42,19 +46,20 @@ public class EnterRythm : MonoBehaviour
 
         if (Scenes.Scenes.present == Scenes.Scene.SelectMusic)
         {
-            float BtnWidth = Screen.width / 1.2f, BtnHeight = Screen.height / 12f;
+            float btnWidth = Screen.width / 1.2f, btnHeight = Screen.height / 12f;
+            btnStyle.fontSize = (int)btnWidth / 8;
 
             //주석친 부분은 노래 선택시 스크롤이 버튼 클릭 방식을 쓸 경우 해제
-            scrollpos = GUI.BeginScrollView(new Rect((Screen.width - BtnWidth) / 2, BtnHeight, BtnWidth, BtnHeight * 10), scrollpos, new Rect(0, 0, 0, BtnHeight * GameData.GetMusics().Count));
-            //if (startMusicIndex > 0 && GUI.Button(new Rect((Screen.width - BtnWidth) / 2, 0, BtnWidth, BtnHeight), "▲")) startMusicIndex--;
+            scrollpos = GUI.BeginScrollView(new Rect((Screen.width - btnWidth) / 2, btnHeight, btnWidth, btnHeight * 10), scrollpos, new Rect(0, 0, 0, btnHeight * GameData.GetMusics().Count));
+            //if (startMusicIndex > 0 && GUI.Button(new Rect((Screen.width - btnWidth) / 2, 0, btnWidth, btnHeight), "▲")) startMusicIndex--;
 
             for (int i = 0; i <= PlayerData.Level; i++)
             //for (int i = startMusicIndex; i < startMusicIndex + 10; i++)
             {
                 //if (i >= GameData.GetMusics().Count) break;
                 //if (i > PlayerData.Level) break;
-                if (GUI.Button(new Rect(0, BtnHeight * i, BtnWidth, BtnHeight), GameData.GetMusics()[i]))
-                //if (GUI.Button(new Rect((Screen.width - BtnWidth) / 2, BtnHeight * (i - startMusicIndex + 1), BtnWidth, BtnHeight), GameData.GetMusics()[i]))
+                if (GUI.Button(new Rect(0, btnHeight * i, btnWidth, btnHeight), GameData.GetMusics()[i], btnStyle))
+                //if (GUI.Button(new Rect((Screen.width - btnWidth) / 2, btnHeight * (i - startMusicIndex + 1), btnWidth, btnHeight), GameData.GetMusics()[i], btnStyle))
                 {
                     RythmData.MyRythm.info.title = GameData.GetMusics()[i];
 
@@ -66,11 +71,13 @@ public class EnterRythm : MonoBehaviour
                 }
             }
 
-            //if (startMusicIndex + 10 < GameData.GetMusics().Count - 1 && GUI.Button(new Rect((Screen.width - BtnWidth) / 2, BtnHeight * 11, BtnWidth, BtnHeight), "▼")) startMusicIndex++;
+            //if (startMusicIndex + 10 < GameData.GetMusics().Count - 1 && GUI.Button(new Rect((Screen.width - btnWidth) / 2, btnHeight * 11, btnWidth, btnHeight), "▼", btnStyle)) startMusicIndex++;
 
             GUI.EndScrollView();
 
-            if (GUI.Button(new Rect(Screen.width * 34 / 35f, 0, Screen.width / 35f, Screen.height / 16f), "x")) Scenes.Scenes.present = Scenes.Scene.InSmithy;
+            btnWidth = Screen.width / 35f;
+            btnStyle.fontSize = (int)btnWidth / 8;
+            if (GUI.Button(new Rect(Screen.width * 34 / 35f, 0, Screen.width / 35f, Screen.height / 16f), "x", btnStyle)) Scenes.Scenes.present = Scenes.Scene.InSmithy;
         }
     }
 }
