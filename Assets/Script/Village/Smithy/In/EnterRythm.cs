@@ -47,7 +47,7 @@ public class EnterRythm : MonoBehaviour
         if (Scenes.Scenes.present == Scenes.Scene.SelectMusic)
         {
             float btnWidth = Screen.width / 1.2f, btnHeight = Screen.height / 12f;
-            btnStyle.fontSize = (int)btnWidth / 8;
+            btnStyle.fontSize = (int)btnWidth / 30;
 
             //주석친 부분은 노래 선택시 스크롤이 버튼 클릭 방식을 쓸 경우 해제
             scrollpos = GUI.BeginScrollView(new Rect((Screen.width - btnWidth) / 2, btnHeight, btnWidth, btnHeight * 10), scrollpos, new Rect(0, 0, 0, btnHeight * GameData.GetMusics().Count));
@@ -76,8 +76,8 @@ public class EnterRythm : MonoBehaviour
             GUI.EndScrollView();
 
             btnWidth = Screen.width / 35f;
-            btnStyle.fontSize = (int)btnWidth / 8;
-            if (GUI.Button(new Rect(Screen.width * 34 / 35f, 0, Screen.width / 35f, Screen.height / 16f), "x", btnStyle)) Scenes.Scenes.present = Scenes.Scene.InSmithy;
+            btnStyle.fontSize = (int)btnWidth * 2 / 3;
+            if (GUI.Button(new Rect(Screen.width * 34 / 35f, 0, Screen.width / 35f, Screen.height / 20f), "x", btnStyle)) Scenes.Scenes.present = Scenes.Scene.InSmithy;
         }
     }
 }

@@ -15,7 +15,7 @@ public class StartGame : MonoBehaviour
         //http://prosto.tistory.com/185 - 화면 비율 조정
         //http://jungmonster.tistory.com/187
         //Screen.SetResolution(가로 픽셀, 세로 픽셀, full screen 유무);
-        //Screen.SetResolution(Screen.width, (Screen.width * 16) / 9, false);
+        Screen.SetResolution(1080, 1920, false);
         Screen.orientation = ScreenOrientation.Landscape;
         Scenes.Scenes.ConvertCamera(GameObject.Find("Main Camera"));
         if (startPos != new Vector3(0, 0, 0)) GameObject.Find("Main Camera").transform.position = startPos;
@@ -33,6 +33,7 @@ public class StartGame : MonoBehaviour
             if (tempPos.y > 200) tempObj.transform.position = new Vector3(tempPos.x - (float)0.24, tempPos.y - (float)0.66, tempPos.z + (float)0.27);
             else Scenes.Scenes.present = Scene.InVillage;
             */
+            Scenes.Scenes.present = Scene.InVillage;
 
             //나중에 구름이 흩어지는 장면을 구성할 것
         }
