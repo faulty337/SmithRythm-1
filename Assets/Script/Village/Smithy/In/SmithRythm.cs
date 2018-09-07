@@ -209,6 +209,7 @@ public class SmithRythm : MonoBehaviour
             float textWidth = Screen.width / 7f, textHeight = Screen.height / 8f;
             btnStyle.alignment = TextAnchor.MiddleLeft;
             btnStyle.fontSize = (int)textWidth / 8;
+            btnStyle = GUI.skin.label;
 
             GUI.Label(new Rect(10, 10, textWidth, textHeight),
                 "점수 : " + score + "\n" +
@@ -218,6 +219,7 @@ public class SmithRythm : MonoBehaviour
             float BtnWidth = Screen.width / 7f, BtnHeight = Screen.height / 16f;
             btnStyle.alignment = TextAnchor.MiddleCenter;
             btnStyle.fontSize = (int)BtnWidth / 8;
+            btnStyle = GUI.skin.button;
 
             if (GUI.Button(new Rect(Screen.width - BtnWidth * 1.05f, BtnHeight / 10, BtnWidth, BtnHeight), "나가기"))
             {
