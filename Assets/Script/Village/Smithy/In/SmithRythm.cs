@@ -34,6 +34,13 @@ public class SmithRythm : MonoBehaviour
     public Animation SmithAnimation;
     public AnimationClip hammer;
 
+    public ParticleSystem hammerEffect;
+
+    void Start()
+    {
+        hammerEffect.Stop();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -108,6 +115,7 @@ public class SmithRythm : MonoBehaviour
 
                             SmithAnimation.Play();
                             gameObject.transform.rotation = Quaternion.Euler(0, 90, 0);
+                            hammerEffect.Play();
                         }
                     }
 
@@ -127,8 +135,14 @@ public class SmithRythm : MonoBehaviour
 
                                 SmithAnimation.Play();
                                 gameObject.transform.rotation = Quaternion.Euler(0, 90, 0);
+                                hammerEffect.Play();
                             }
                         }
+                    }
+
+                    if (!SmithAnimation.isPlaying)
+                    {
+                        hammerEffect.Stop();
                     }
 
                     if (JudgeCircle(0, 0, MULTISPEED / 4f - (rank - MULTISPEED / 4f) / 2) != Judge.Fail)
