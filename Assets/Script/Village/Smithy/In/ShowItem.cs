@@ -37,14 +37,11 @@ public class ShowItem : MonoBehaviour
 
     void OnGUI()
     {
-        GUIStyle btnStyle = GUI.skin.button;
-
         if (Scenes.Scenes.present == Scenes.Scene.ShowItem)
         {
             float btnwidth = Screen.width / 7f, btnheight = Screen.height / 16f; //100, 20 - 대략
-            btnStyle.fontSize = (int)btnwidth / 8;
 
-            if (GUI.Button(new Rect((Screen.width - btnwidth) / 2, (Screen.height - btnheight) / 2 + Screen.height / 2.5f, btnwidth, btnheight), "확인"))
+            if (GUI.Button(new Rect((Screen.width - btnwidth) / 2, (Screen.height - btnheight) / 2 + Screen.height / 2.5f, btnwidth, btnheight), "확인", Scenes.Scenes.GUIAlign("button", (int)btnwidth / 8)))
             {
                 //확인 버튼을 누르면 카메라를 리듬게임 시작 전으로 돌리고 태양위치를 원래대로 돌린후 시간을 동작
                 Scenes.Scenes.present = Scenes.Scene.InSmithy;

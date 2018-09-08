@@ -41,14 +41,11 @@ public class StartGame : MonoBehaviour
 
     void OnGUI()
     {
-        GUIStyle btnStyle = GUI.skin.button;
-
         if (Scenes.Scenes.present == Scene.Initialization)
         {
-            float BtnWidth = Screen.width / 7f, BtnHeight = Screen.height / 16f; //100, 20 - 대략    
-            btnStyle.fontSize = (int)BtnWidth / 8;
+            float btnWidth = Screen.width / 7f, btnHeight = Screen.height / 16f; //100, 20 - 대략    
 
-            if (GUI.Button(new Rect((Screen.width - BtnWidth) / 2, (Screen.height - BtnHeight) / 2  + Screen.height / 4, BtnWidth, BtnHeight), "Game Start", btnStyle))
+            if (GUI.Button(new Rect((Screen.width - btnWidth) / 2, (Screen.height - btnHeight) / 2  + Screen.height / 4, btnWidth, btnHeight), "게임 시작", Scenes.Scenes.GUIAlign("button", (int)btnWidth / 8)))
             {
                 Scenes.Scenes.present = Scene.MovingVillage;
                 Time.timeScale = 1;

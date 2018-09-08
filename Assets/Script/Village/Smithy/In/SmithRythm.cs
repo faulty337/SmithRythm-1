@@ -202,26 +202,19 @@ public class SmithRythm : MonoBehaviour
 
     void OnGUI()
     {
-        GUIStyle btnStyle = GUI.skin.button;
-
         if (Scenes.Scenes.present == Scenes.Scene.SmithRythm)
         {
             float textWidth = Screen.width / 7f, textHeight = Screen.height / 8f;
-            btnStyle.alignment = TextAnchor.MiddleLeft;
-            btnStyle.fontSize = (int)textWidth / 8;
-            btnStyle = GUI.skin.label;
 
             GUI.Label(new Rect(10, 10, textWidth, textHeight),
                 "점수 : " + score + "\n" +
                 "콤보 : " + combo + "\n" + 
-                "에너지 : " + energy.ToString("N2"), btnStyle);
+                "에너지 : " + energy.ToString("N2"),
+                Scenes.Scenes.GUIAlign("label", (int)textWidth / 8));
 
             float BtnWidth = Screen.width / 7f, BtnHeight = Screen.height / 16f;
-            btnStyle.alignment = TextAnchor.MiddleCenter;
-            btnStyle.fontSize = (int)BtnWidth / 8;
-            btnStyle = GUI.skin.button;
 
-            if (GUI.Button(new Rect(Screen.width - BtnWidth * 1.05f, BtnHeight / 10, BtnWidth, BtnHeight), "나가기"))
+            if (GUI.Button(new Rect(Screen.width - BtnWidth * 1.05f, BtnHeight / 10, BtnWidth, BtnHeight), "나가기", Scenes.Scenes.GUIAlign("button", (int)BtnWidth / 8)))
             {
                 energy = 0;
             }

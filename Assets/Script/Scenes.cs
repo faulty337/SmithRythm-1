@@ -86,5 +86,24 @@ namespace Scenes
                 mainCam[i].GetComponent<AudioListener>().enabled = false;
             }
         }
+
+        public static GUIStyle GUIAlign(string name, int fontSize)
+        {
+            GUIStyle style = new GUIStyle();
+            if (name.Equals("button"))
+            {
+                style = GUI.skin.button;
+                style.alignment = TextAnchor.MiddleCenter;
+            }
+            else if (name.Equals("label"))
+            {
+                style = GUI.skin.label;
+                style.alignment = TextAnchor.MiddleLeft;
+            }
+
+            style.fontSize = fontSize;
+
+            return style;
+        }
     }
 }

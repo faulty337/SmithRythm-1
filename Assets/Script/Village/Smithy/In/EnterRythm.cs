@@ -55,14 +55,11 @@ public class EnterRythm : MonoBehaviour
 
     void OnGUI()
     {
-        GUIStyle btnStyle = GUI.skin.button;
-
         if (Scenes.Scenes.present == Scenes.Scene.InSmithy)
         {
             float btnWidth = Screen.width / 7f, btnHeight = Screen.height / 16f; //100, 20 - 대략
-            btnStyle.fontSize = (int)btnWidth / 8;
 
-            if (GUI.Button(new Rect(btnWidth / 10, btnHeight / 2, btnWidth, btnHeight), "나가기", btnStyle))
+            if (GUI.Button(new Rect(btnWidth / 10, btnHeight / 2, btnWidth, btnHeight), "나가기", Scenes.Scenes.GUIAlign("button", (int)btnWidth / 8)))
             {
                 Scenes.Scenes.present = Scenes.Scene.InVillage;
                 SceneManager.LoadScene("MainScene");
@@ -72,7 +69,6 @@ public class EnterRythm : MonoBehaviour
         if (Scenes.Scenes.present == Scenes.Scene.SelectMusic)
         {
             float btnWidth = Screen.width / 1.2f, btnHeight = Screen.height / 12f;
-            btnStyle.fontSize = (int)btnWidth / 30;
 
             //주석친 부분은 노래 선택시 스크롤이 버튼 클릭 방식을 쓸 경우 해제
             scrollpos = GUI.BeginScrollView(new Rect((Screen.width - btnWidth) / 2, btnHeight, btnWidth, btnHeight * 10), scrollpos, new Rect(0, 0, 0, btnHeight * GameData.GetMusics().Count));
@@ -83,7 +79,7 @@ public class EnterRythm : MonoBehaviour
             {
                 //if (i >= GameData.GetMusics().Count) break;
                 //if (i > PlayerData.Level) break;
-                if (GUI.Button(new Rect(0, btnHeight * i, btnWidth, btnHeight), GameData.GetMusics()[i], btnStyle))
+                if (GUI.Button(new Rect(0, btnHeight * i, btnWidth, btnHeight), GameData.GetMusics()[i], Scenes.Scenes.GUIAlign("button", (int)btnWidth / 30)))
                 //if (GUI.Button(new Rect((Screen.width - btnWidth) / 2, btnHeight * (i - startMusicIndex + 1), btnWidth, btnHeight), GameData.GetMusics()[i], btnStyle))
                 {
                     RythmData.MyRythm.info.title = GameData.GetMusics()[i];
@@ -100,9 +96,8 @@ public class EnterRythm : MonoBehaviour
 
             GUI.EndScrollView();
 
-            btnWidth = Screen.width / 35f;
-            btnStyle.fontSize = (int)btnWidth * 2 / 3;
-            if (GUI.Button(new Rect(Screen.width * 34 / 35f, 0, Screen.width / 35f, Screen.height / 20f), "x", btnStyle)) Scenes.Scenes.present = Scenes.Scene.InSmithy;
+            btnWidth = Screen.width / 30f;
+            if (GUI.Button(new Rect(btnWidth * 29, 0, btnWidth, Screen.height / 20f), "x", Scenes.Scenes.GUIAlign("button", (int)btnWidth / 2))) Scenes.Scenes.present = Scenes.Scene.InSmithy;
         }
     }
 }
