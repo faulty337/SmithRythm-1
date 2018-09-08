@@ -41,7 +41,7 @@ public class SmithRythm : MonoBehaviour
         {
             if (!gameStart)
             {
-                MyRythm.ReadFile(Application.dataPath + "/Resources/" + MyRythm.info.title + ".txt");
+                MyRythm.ReadFile(MyRythm.info.title);
                 circleTmp = new GameObject[MyRythm.info.totalCount];
 
                 //게임 요소 초기화

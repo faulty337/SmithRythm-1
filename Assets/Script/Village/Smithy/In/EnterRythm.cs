@@ -59,7 +59,7 @@ public class EnterRythm : MonoBehaviour
         {
             float btnWidth = Screen.width / 7f, btnHeight = Screen.height / 16f; //100, 20 - 대략
 
-            if (GUI.Button(new Rect(btnWidth / 10, btnHeight / 2, btnWidth, btnHeight), "나가기", Scenes.Scenes.GUIAlign("button", (int)btnWidth / 8)))
+            if (GUI.Button(new Rect(Screen.width - btnWidth * 1.05f, btnHeight / 10, btnWidth, btnHeight), "나가기", Scenes.Scenes.GUIAlign("button", (int)btnWidth / 8)))
             {
                 Scenes.Scenes.present = Scenes.Scene.InVillage;
                 SceneManager.LoadScene("MainScene");

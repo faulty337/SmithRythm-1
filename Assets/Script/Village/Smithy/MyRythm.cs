@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using UnityEngine;
+using System.Collections.Generic;
 
 namespace RythmData
 {
@@ -22,70 +22,58 @@ namespace RythmData
         public static MusicInfo info;
         public static List<RythmData> data = new List<RythmData>();
 
+        //안드로이드에서 text파일 load하기
+        //http://www.devkorea.co.kr/bbs/board.php?bo_table=m03_qna&wr_id=54914
         public static int ReadFile(string fileName)
         {
-            string buffer = null;
-            StreamReader file;
+            TextAsset noteTxtAsset = Resources.Load(fileName, typeof(TextAsset)) as TextAsset;
+            string[] buffer = noteTxtAsset.text.Split('\n');
+            int index = 0;
 
-            try
+            while (!buffer[index].StartsWith("@Information Field"))
             {
-                file = new StreamReader(new FileStream(fileName, FileMode.Open));
-            }
-            catch (FileNotFoundException)
-            {
-                return -1;
+                if (index++ >= buffer.Length) return -2;
             }
 
-            do
+            while (!buffer[index].StartsWith("@Data Field"))
             {
-                buffer = file.ReadLine();
-
-                if (file.EndOfStream) return -2;
-            }
-            while (!buffer.StartsWith("@Information Field"));
-
-            do
-            {
-                if (buffer.StartsWith("#"))
+                if (buffer[index].StartsWith("#"))
                 {
-                    if (buffer.StartsWith("#PLAYER "))
+                    if (buffer[index].StartsWith("#PLAYER "))
                     {
                         //플레이 방법
                     }
-                    else if (buffer.StartsWith("#TITLE "))
+                    else if (buffer[index].StartsWith("#TITLE "))
                     {
                         //곡 제목
-                        info.title = buffer.Substring(7);
+                        info.title = buffer[index].Substring(7, buffer[index].Length - 8);
                     }
-                    else if (buffer.StartsWith("#ARTIST "))
+                    else if (buffer[index].StartsWith("#ARTIST "))
                     {
                         //곡 제작자 - 대장장이 게임이므로 별로 필요 없을 듯 함
                     }
-                    else if (buffer.StartsWith("#GENRE "))
+                    else if (buffer[index].StartsWith("#GENRE "))
                     {
                         //곡 장르 - 곡 제작자와 마찬가지
                     }
-                    else if (buffer.StartsWith("#PLAYLEVEL "))
+                    else if (buffer[index].StartsWith("#PLAYLEVEL "))
                     {
                         //곡 난이도 - 주관적이라 사람들의 의견을 듣고 결정
                     }
                 }
 
-                buffer = file.ReadLine();
+                index++;
             }
-            while (!buffer.StartsWith("@Data Field"));
 
             int count = 0;
             float pos = 0; //데이터 계산 시 파일 포맷 작성이 너무 어려워지므로 박자만 기록하도록하기 위한 변수
-            do
+            while (index < buffer.Length)
             {
-                buffer = file.ReadLine();
-
-                if (buffer.Length == 0) continue;
-                if (buffer.StartsWith("#"))
+                if (buffer[index].Length == 0) continue;
+                if (buffer[index].StartsWith("#"))
                 {
                     //데이터 구성은 way x z bpm순으로 구성 되어 있음
-                    string[] dataStr = buffer.Split(' '); //따라서 4개의 데이터가 있는 배열
+                    string[] dataStr = buffer[index].Split(' '); //따라서 4개의 데이터가 있는 배열
 
                     RythmData temp = new RythmData();
                     temp.way = dataStr[0].Substring(1); //맨 앞에 # 제거
@@ -126,12 +114,11 @@ namespace RythmData
 
                     count++;
                 }
+
+                index++;
             }
-            while (!file.EndOfStream);
 
             info.totalCount = count;
-
-            file.Close();
 
             return 1;
         }
