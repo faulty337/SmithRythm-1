@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Scenes;
+using CamaraEffect;
 
 //http://iw90.tistory.com/67?category=633211 - 모바일 화면 크기 조정 방법
 
@@ -12,18 +13,23 @@ public class StartGame : MonoBehaviour
 
     void Awake()
     {
-        //http://prosto.tistory.com/185 - 화면 비율 조정
-        //http://jungmonster.tistory.com/187
-        //Screen.SetResolution(가로 픽셀, 세로 픽셀, full screen 유무);
-        //Screen.SetResolution(1080, 1920, false);
-        Screen.orientation = ScreenOrientation.Landscape;
-        Scenes.Scenes.ConvertCamera(GameObject.Find("Main Camera"));
-        if (startPos != new Vector3(0, 0, 0)) GameObject.Find("Main Camera").transform.position = startPos;
+        if (Scenes.Scenes.present == Scenes.Scene.Initialization)
+        {
+            //http://prosto.tistory.com/185 - 화면 비율 조정
+            Screen.orientation = ScreenOrientation.Landscape;
+        }
+        else if (Scenes.Scenes.present == Scene.InVillage)
+        {
+            CameraEffect.fade = false;
+            GameObject.Find("Main Camera").transform.position = startPos;
+        }
     }
-	
-	// Update is called once per frame
-	void Update()
+
+    // Update is called once per frame
+    void Update()
     {
+        if (!CameraEffect.fade && CameraEffect.alph != 0) return;
+
         if (Scenes.Scenes.present == Scene.MovingVillage)
         {
             //메인 카메라 이동 - 구름을 만든 후 같이 구성
@@ -34,6 +40,7 @@ public class StartGame : MonoBehaviour
             else Scenes.Scenes.present = Scene.InVillage;
             */
             Scenes.Scenes.present = Scene.InVillage;
+            Time.timeScale = 1;
 
             //나중에 구름이 흩어지는 장면을 구성할 것
         }
@@ -48,7 +55,6 @@ public class StartGame : MonoBehaviour
             if (GUI.Button(new Rect((Screen.width - btnWidth) / 2, (Screen.height - btnHeight) / 2  + Screen.height / 4, btnWidth, btnHeight), "게임 시작", Scenes.Scenes.GUIAlign("button", (int)btnWidth / 8)))
             {
                 Scenes.Scenes.present = Scene.MovingVillage;
-                Time.timeScale = 1;
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using CamaraEffect;
 
 public class EnterRythm : MonoBehaviour
 {
@@ -14,12 +15,14 @@ public class EnterRythm : MonoBehaviour
         }
         else if (Scenes.Scenes.present == Scenes.Scene.InSmithy)
         {
-            Scenes.Scenes.ConvertCamera(GameObject.Find("Smithy Camera"));
+            CameraEffect.fade = false;
         }
     }
 
     void Update()
     {
+        if (!CameraEffect.fade && CameraEffect.alph != 0) return;
+
         if (Scenes.Scenes.present == Scenes.Scene.InSmithy)
         {
             if (Input.GetMouseButtonDown(0))
@@ -32,7 +35,19 @@ public class EnterRythm : MonoBehaviour
                     //startMusicIndex = 0;
                 }
             }
-            
+        }
+
+        if (CameraEffect.fade && CameraEffect.alph == 1)
+        {
+            if (Scenes.Scenes.present == Scenes.Scene.InVillage)
+            {
+                SceneManager.LoadScene("MainScene");
+            }
+            else if (Scenes.Scenes.present == Scenes.Scene.SelectMusic)
+            {
+                Scenes.Scenes.present = Scenes.Scene.SmithRythm;
+                SceneManager.LoadScene("RythmScene");
+            }
         }
     }
 
@@ -55,6 +70,8 @@ public class EnterRythm : MonoBehaviour
 
     void OnGUI()
     {
+        if (!CameraEffect.fade && CameraEffect.alph != 0) return;
+
         if (Scenes.Scenes.present == Scenes.Scene.InSmithy)
         {
             float btnWidth = Screen.width / 7f, btnHeight = Screen.height / 16f; //100, 20 - 대략
@@ -62,7 +79,7 @@ public class EnterRythm : MonoBehaviour
             if (GUI.Button(new Rect(Screen.width - btnWidth * 1.05f, btnHeight / 10, btnWidth, btnHeight), "나가기", Scenes.Scenes.GUIAlign("button", (int)btnWidth / 8)))
             {
                 Scenes.Scenes.present = Scenes.Scene.InVillage;
-                SceneManager.LoadScene("MainScene");
+                CameraEffect.fade = true;
             }
         }
 
@@ -84,11 +101,7 @@ public class EnterRythm : MonoBehaviour
                 {
                     RythmData.MyRythm.info.title = GameData.GetMusics()[i];
 
-                    Scenes.Scenes.present = Scenes.Scene.SmithRythm;
-                    GameObject[] temp = new GameObject[2];
-                    temp[0] = GameObject.Find("Anvil Camera");
-                    temp[1] = GameObject.Find("Smithy Camera");
-                    Scenes.Scenes.ConvertCamera(temp);
+                    CameraEffect.fade = true;
                 }
             }
 

@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using CamaraEffect;
 
 public class EnterSmithy : MonoBehaviour
 {
     void Update()
     {
+        if (!CameraEffect.fade && CameraEffect.alph != 0) return;
+
         if (Scenes.Scenes.present == Scenes.Scene.InVillage)
         {
             if (Input.GetMouseButtonDown(0))
@@ -14,8 +17,16 @@ public class EnterSmithy : MonoBehaviour
                 {
                     Scenes.Scenes.present = Scenes.Scene.InSmithy;
                     StartGame.startPos = GameObject.Find("Main Camera").transform.position;
-                    SceneManager.LoadScene("SmithyScene");
+                    CameraEffect.fade = true;
                 }
+            }
+        }
+
+        if (CameraEffect.fade && CameraEffect.alph == 1)
+        {
+            if (Scenes.Scenes.present == Scenes.Scene.InSmithy)
+            {
+                SceneManager.LoadScene("SmithyScene");
             }
         }
     }
