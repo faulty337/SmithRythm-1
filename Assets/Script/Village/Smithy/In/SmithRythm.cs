@@ -18,7 +18,7 @@ public class SmithRythm : MonoBehaviour
 {
     AudioSource anvilAudio;
 
-    bool gameStart;
+    float startTime; //노래 자체는 시작하자마자 나오므로 시작 시간을 지정할 때 사용
     float speed;
     const float MULTISPEED = 20;
     float presentBPM;
@@ -53,6 +53,7 @@ public class SmithRythm : MonoBehaviour
     {
         energy = 100;
         rank = 1.8f * MULTISPEED / 4f; //5가 퍼펙트 기준
+        SmithAnimation.Play();
         hammerEffect.Stop();
 
         //판정원이 그려질 오브젝트 생성
@@ -71,7 +72,8 @@ public class SmithRythm : MonoBehaviour
         tempLine = judgeCircle.AddComponent<LineRenderer>();
         DrawCircle(ref tempLine, rank);
 
-        MyRythm.ReadFile(MyRythm.info.title);
+        //노트 파일 읽고 노트 생성
+        MyRythm.ReadFile("NoteText/" + MyRythm.info.title);
         circleNote = new GameObject[MyRythm.info.totalCount];
 
         GameObject.Find("Circle Original").GetComponent<Renderer>().enabled = true;
@@ -83,6 +85,12 @@ public class SmithRythm : MonoBehaviour
             circleNote[i].name = MyRythm.data[i].way;
         }
         GameObject.Find("Circle Original").GetComponent<Renderer>().enabled = false;
+
+        //노래 생성
+        anvilAudio = gameObject.AddComponent<AudioSource>();
+        anvilAudio.playOnAwake = false;
+        anvilAudio.loop = false;
+        anvilAudio.clip = Resources.Load("Song/" + MyRythm.info.title, typeof(AudioClip)) as AudioClip;
     }
 
     // Update is called once per frame
@@ -92,14 +100,29 @@ public class SmithRythm : MonoBehaviour
 
         if (Scenes.Scenes.present == Scenes.Scene.SmithRythm)
         {
-            if (!gameStart)
+            if (startTime < 3)
             {
-                SmithAnimation.Play();
-                PlayMusic(MyRythm.info.title);
-                gameStart = true;
+                startTime += Time.deltaTime;
+                MoveCircle(Time.deltaTime);
+
+                if (startTime >= 3)
+                {
+                    if (startTime != 3)
+                    {
+                        MoveCircle(3 - startTime);
+                        startTime = 3;
+                    }
+
+                    anvilAudio.Play();
+                }
             }
-            if (anvilAudio.isPlaying)
+            else if (anvilAudio.isPlaying)
             {
+                if (!SmithAnimation.isPlaying)
+                {
+                    hammerEffect.Stop();
+                }
+
                 if (circleIndex == circleNote.Length) return;
 
                 presentBPM = MyRythm.data[circleIndex].bpm;
@@ -136,11 +159,6 @@ public class SmithRythm : MonoBehaviour
                     }
                 }
 
-                if (!SmithAnimation.isPlaying)
-                {
-                    hammerEffect.Stop();
-                }
-
                 if (JudgeCircle(0, 0, MULTISPEED / 4f - (rank - MULTISPEED / 4f) / 2) != Judge.Fail)
                 {
                     //중앙에 도달했으면 제거
@@ -158,24 +176,26 @@ public class SmithRythm : MonoBehaviour
 
                 MoveCircle(Time.deltaTime);
             }
+            else if (startTime < 6)
+            {
+                startTime += Time.deltaTime;
+
+            }
             else
             {
-                if (energy >= 80)
-                {
-                    Scenes.Scenes.present = Scenes.Scene.ShowItem;
-                }
-                else
+                Scenes.Scenes.present = energy >= 80 ? Scenes.Scene.ShowItem : Scenes.Scene.InSmithy;
+
+                if (energy < 80)
                 {
                     //죽어서 게임을 나온 경우
                     //GameOver가 나오도록 구현할 것
 
-                    Scenes.Scenes.present = Scenes.Scene.InSmithy;
                 }
 
                 CameraEffect.fade = true;
 
                 Destroy(anvilAudio);
-                for (int i = circleIndex; i < circleNote.Length; i++) Destroy(circleNote[i]);
+                
             }
         }
 
@@ -233,15 +253,6 @@ public class SmithRythm : MonoBehaviour
         }
     }
 
-    void PlayMusic(string musicStr)
-    {
-        anvilAudio = gameObject.AddComponent<AudioSource>();
-        anvilAudio.playOnAwake = false;
-        anvilAudio.loop = false;
-        anvilAudio.clip = Resources.Load(musicStr, typeof(AudioClip)) as AudioClip;
-        anvilAudio.Play();
-    }
-
     Judge JudgeCircle(float min, float mark, float max) //min, max 허용 범위, mark 점수대
     {
         if (circleIndex >= circleNote.Length) return Judge.Fail;
@@ -280,18 +291,21 @@ public class SmithRythm : MonoBehaviour
     {
         for (int i = circleIndex; i < circleNote.Length; i++)
         {
-            speed = (presentBPM / 60) * time * MULTISPEED; //bpm / 60 * 업데이트 함수 호출시간
+            //bpm / 60 * 업데이트 함수 호출시간
+            speed = (presentBPM / 60) * time * MULTISPEED;
 
             //이동
-            GameObject gObj = circleNote[i];
-            Vector3 position = gObj.transform.position;
-            float x = position.x;
-            float y = position.y;
-            float z = position.z;
-            if (circleNote[i].name.Equals("Left")) circleNote[i].transform.position = new Vector3(x + speed, y, z);
-            else if (gObj.name.Equals("Right")) circleNote[i].transform.position = new Vector3(x - speed, y, z);
-            else if (gObj.name.Equals("Down")) circleNote[i].transform.position = new Vector3(x, y, z + speed);
-            else if (gObj.name.Equals("Up")) circleNote[i].transform.position = new Vector3(x, y, z - speed);
+            Vector3 position = circleNote[i].transform.position;
+            float x = position.x, y = position.y, z = position.z;
+            switch (circleNote[i].name)
+            {
+                case "Left": position = new Vector3(x + speed, y, z); break;
+                case "Right": position = new Vector3(x - speed, y, z); break;
+                case "Down": position = new Vector3(x, y, z + speed); break;
+                case "Up": position = new Vector3(x, y, z - speed); break;
+            }
+
+            circleNote[i].transform.position = position;
         }
     }
 

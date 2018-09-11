@@ -13,7 +13,7 @@ namespace Scenes
     public class Scenes
     {
         public static Scene present = Scene.Initialization; //현재 게임의 상태(씬)
-
+        
         public static GUIStyle GUIAlign(string name, int fontSize)
         {
             GUIStyle style = new GUIStyle();
