@@ -21,12 +21,9 @@ public class SmithRythm : MonoBehaviour
     float startTime; //노래 자체는 시작하자마자 나오므로 시작 시간을 지정할 때 사용
     float speed;
     const float MULTISPEED = 20;
-    float presentBPM;
-    int circleIndex;
-    float rank;
+    int circleIndex, bpmIndex; //터치 시 사라지는 인덱스와 bpm에 맞추어야하는 인덱스를 구분한다.
 
     GameObject[] circleNote; // 나오는 원들을 의미
-    GameObject perfectCircle, judgeCircle;
 
     float energy; //진행도
     int score; //게임 점수
@@ -36,7 +33,7 @@ public class SmithRythm : MonoBehaviour
     public AnimationClip hammer;
 
     public ParticleSystem hammerEffect;
-
+    
     void Awake()
     {
         if (Scenes.Scenes.present == Scenes.Scene.Initialization)
@@ -52,25 +49,8 @@ public class SmithRythm : MonoBehaviour
     void Start()
     {
         energy = 100;
-        rank = 1.8f * MULTISPEED / 4f; //5가 퍼펙트 기준
         SmithAnimation.Play();
         hammerEffect.Stop();
-
-        //판정원이 그려질 오브젝트 생성
-        perfectCircle = new GameObject("PerfectCircle");
-        judgeCircle = new GameObject("JudgeCircle");
-        perfectCircle.transform.parent = gameObject.transform;
-        judgeCircle.transform.parent = gameObject.transform;
-
-        //지정
-        Vector3 tempPos = gameObject.transform.position;
-        perfectCircle.transform.position = new Vector3(0, tempPos.y + 0.15f * gameObject.transform.localScale.y, 0);
-        judgeCircle.transform.position = new Vector3(0, tempPos.y + 0.15f * gameObject.transform.localScale.y, 0);
-
-        LineRenderer tempLine = perfectCircle.AddComponent<LineRenderer>();
-        DrawCircle(ref tempLine, MULTISPEED / 4f);
-        tempLine = judgeCircle.AddComponent<LineRenderer>();
-        DrawCircle(ref tempLine, rank);
 
         //노트 파일 읽고 노트 생성
         MyRythm.ReadFile("NoteText/" + MyRythm.info.title);
@@ -78,7 +58,6 @@ public class SmithRythm : MonoBehaviour
 
         GameObject.Find("Circle Original").GetComponent<Renderer>().enabled = true;
         GameObject original = GameObject.Find("Circle Original");
-        presentBPM = MyRythm.data[0].bpm;
         for (int i = 0; i < MyRythm.info.totalCount; i++)
         {
             circleNote[i] = Instantiate(original, new Vector3(MyRythm.data[i].x * MULTISPEED, original.transform.position.y, MyRythm.data[i].z * MULTISPEED), new Quaternion(0, 0, 0, 0), GameObject.Find("Game").transform);
@@ -125,10 +104,7 @@ public class SmithRythm : MonoBehaviour
 
                 if (circleIndex == circleNote.Length) return;
 
-                presentBPM = MyRythm.data[circleIndex].bpm;
-
-                Judge temp = JudgeCircle(MULTISPEED / 4f - (rank - MULTISPEED / 4f) / 2, MULTISPEED / 4f, rank);
-
+                Judge temp = JudgeCircle(circleIndex, MULTISPEED / 4);
                 if (temp != Judge.Fail)
                 {
                     bool bTmp = false;
@@ -149,24 +125,27 @@ public class SmithRythm : MonoBehaviour
 
                     if (bTmp)
                     {
-                        //중앙과 가까울 때 클릭하면
-                        Destroy(circleNote[circleIndex++]);
-                        combo++;
-                        score += (int)temp * combo;
-
+                        //bpm을 맞추어야 하기 떄문에 표시를 없앰
+                        circleNote[circleIndex++].GetComponent<Renderer>().enabled = false;
+                        score += (int)temp * ++combo;
+                        
                         SmithAnimation.Play();
                         hammerEffect.Play();
                     }
                 }
 
-                if (JudgeCircle(0, 0, MULTISPEED / 4f - (rank - MULTISPEED / 4f) / 2) != Judge.Fail)
+                if (JudgeCircle(bpmIndex, 0) != Judge.Fail)
                 {
                     //중앙에 도달했으면 제거
-                    Destroy(circleNote[circleIndex++]);
-                    combo = 0;
+                    Destroy(circleNote[bpmIndex++]);
 
-                    //원을 클릭하지 못했으므로 에너지 감소
-                    energy -= 100f / MyRythm.info.totalCount;
+                    //현 인덱스가 bpm인덱스보다 작으면 원 노트를 터치 하지 못한 것
+                    if (circleIndex < bpmIndex)
+                    {
+                        circleIndex++;
+                        combo = 0;
+                        energy -= 100f / MyRythm.info.totalCount;
+                    }
 
                     if (energy < 80)
                     {
@@ -179,7 +158,6 @@ public class SmithRythm : MonoBehaviour
             else if (startTime < 6)
             {
                 startTime += Time.deltaTime;
-
             }
             else
             {
@@ -193,9 +171,6 @@ public class SmithRythm : MonoBehaviour
                 }
 
                 CameraEffect.fade = true;
-
-                Destroy(anvilAudio);
-                
             }
         }
 
@@ -253,17 +228,17 @@ public class SmithRythm : MonoBehaviour
         }
     }
 
-    Judge JudgeCircle(float min, float mark, float max) //min, max 허용 범위, mark 점수대
+    Judge JudgeCircle(int index, float max) //index 판정할 인덱스, max 허용 범위
     {
-        if (circleIndex >= circleNote.Length) return Judge.Fail;
+        if (index >= circleNote.Length) return Judge.Fail;
 
-        string name = circleNote[circleIndex].name;
-        Vector3 position = circleNote[circleIndex].transform.position;
-        if ((max + mark) / 4f >= GetDistance(name, position) && GetDistance(name, position) >= (min + mark) / 4f)
+        string name = circleNote[index].name;
+        Vector3 position = circleNote[index].transform.position;
+        if (max / 4 >= GetDistance(name, position))
         {
             return Judge.Perfect;
         }
-        else if ((max + mark) / 2f >= GetDistance(name, position) && GetDistance(name, position) >= (min + mark) / 2f)
+        else if (max / 2 >= GetDistance(name, position))
         {
             return Judge.Great;
         }
@@ -289,10 +264,13 @@ public class SmithRythm : MonoBehaviour
 
     void MoveCircle(float time)
     {
-        for (int i = circleIndex; i < circleNote.Length; i++)
+        for (int i = bpmIndex; i < circleNote.Length; i++)
         {
             //bpm / 60 * 업데이트 함수 호출시간
-            speed = (presentBPM / 60) * time * MULTISPEED;
+            if (bpmIndex != 0) speed = MyRythm.data[bpmIndex - 1].bpm;
+            else speed = MyRythm.data[0].bpm;
+
+            speed *= 1f / 60 * time * MULTISPEED;
 
             //이동
             Vector3 position = circleNote[i].transform.position;
@@ -307,32 +285,5 @@ public class SmithRythm : MonoBehaviour
 
             circleNote[i].transform.position = position;
         }
-    }
-
-    //http://www.devkorea.co.kr/bbs/board.php?bo_table=m03_qna&wr_id=52770 - 원 그리기 예제
-    void DrawCircle(ref LineRenderer circle, float radius)
-    {
-        int index = 0;
-        Vector3 firstPoint = Vector3.zero;
-        float thetaInterval = 0.1f;
-
-        circle.positionCount = ((int)(2 * Mathf.PI / thetaInterval) + 2);// 정점 갯수 설정
-        circle.useWorldSpace = false;
-        circle.startWidth = 0.1f;
-        circle.endWidth = 0.1f;
-
-        for (float theta = 0f; theta < (2 * Mathf.PI); theta += thetaInterval)
-        {
-            float x = radius * Mathf.Cos(theta); //현재각도에-> 원의좌표로 변환
-            float z = radius * Mathf.Sin(theta);
-
-            Vector3 pos = new Vector3(x, 0, z);
-
-            circle.SetPosition(index, pos);
-
-            if (index++ == 0) firstPoint = pos;
-        }
-
-        circle.SetPosition(index, firstPoint);
     }
 }

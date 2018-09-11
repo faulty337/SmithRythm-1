@@ -74,30 +74,14 @@ namespace RythmData
                 {
                     //데이터 구성은 way x z bpm순으로 구성 되어 있음
                     string[] dataStr = buffer[index].Split(' '); //따라서 4개의 데이터가 있는 배열
-
-                    RythmData temp = new RythmData();
-                    temp.way = dataStr[0].Substring(1); //맨 앞에 # 제거
-                    if (!dataStr[1].Equals("0"))
+                    pos += float.Parse(dataStr[1]) + float.Parse(dataStr[2]);
+                    RythmData temp = new RythmData
                     {
-                        pos += float.Parse(dataStr[1]);
-                        temp.x = pos;
-                    }
-                    else
-                    {
-                        temp.x = 0;
-                    }
-
-                    if (!dataStr[2].Equals("0"))
-                    {
-                        pos += float.Parse(dataStr[2]);
-                        temp.z = pos;
-                    }
-                    else
-                    {
-                        temp.z = 0;
-                    }
-
-                    temp.bpm = int.Parse(dataStr[3]);
+                        way = dataStr[0].Substring(1), //맨 앞에 # 제거
+                        x = dataStr[1].Equals("0") ? 0 : pos,
+                        z = dataStr[2].Equals("0") ? 0 : pos,
+                        bpm = int.Parse(dataStr[3])
+                    };
 
                     switch (temp.way)
                     {

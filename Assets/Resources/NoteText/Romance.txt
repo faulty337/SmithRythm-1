@@ -9,7 +9,7 @@
 
 Start -> 8 seconds
 Start BPM is 102 -> 102 / 60 = 1.7 -> speed
-Start Position -> 1.7 * 3 = 5.4
+Start Position -> 1.7 * (3 + 0.1) = 5.57
 
 #Left 5.4 0 102
 #Left 1 0 102
