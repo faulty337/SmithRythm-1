@@ -8,10 +8,16 @@ ModelImporter:
     400000: smith_in
     400002: //RootNode
     2100000: palette
+    2100002: smith_inMat
     2300000: smith_in
     3300000: smith_in
     4300000: smith_in
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: smith_inMat
+    second: {fileID: 2100000, guid: c66c41423f910bf4faa7132bbed2d380, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
