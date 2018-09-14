@@ -25,7 +25,7 @@ public class SmithRythm : MonoBehaviour
 
     GameObject[] circleNote; // 나오는 원들을 의미
 
-    float energy; //진행도
+    float energy, endEnergy; //진행도
     int score; //게임 점수
     int combo;
 
@@ -49,6 +49,7 @@ public class SmithRythm : MonoBehaviour
     void Start()
     {
         energy = 100;
+        endEnergy = 80;
         SmithAnimation.Play();
         hammerEffect.Stop();
 
@@ -147,7 +148,7 @@ public class SmithRythm : MonoBehaviour
                         energy -= 100f / MyRythm.info.totalCount;
                     }
 
-                    if (energy < 80)
+                    if (energy < endEnergy)
                     {
                         anvilAudio.Stop();
                     }
@@ -163,7 +164,7 @@ public class SmithRythm : MonoBehaviour
             {
                 Scenes.Scenes.present = energy >= 80 ? Scenes.Scene.ShowItem : Scenes.Scene.InSmithy;
 
-                if (energy < 80)
+                if (energy < endEnergy)
                 {
                     //죽어서 게임을 나온 경우
                     //GameOver가 나오도록 구현할 것

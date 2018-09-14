@@ -114,7 +114,7 @@ public class PlayerData : MonoBehaviour
 
             //사용자 데이터 가져오기 - 만들 수 있는 아이템의 최고 인덱스, 만든 아이템 등
             item = new List<string>(PlayerPrefs.GetString("Item", "").Split(','));
-            fullLevel = GameData.Getitems().Count - 1;
+            fullLevel = GameData.CountItem() - 1;
         }
     }
 

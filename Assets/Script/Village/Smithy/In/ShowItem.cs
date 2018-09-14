@@ -5,7 +5,7 @@ using RythmData;
 
 public class ShowItem : MonoBehaviour
 {
-    public MeshFilter[] itemMesh;
+    int index; //보여줄 아이템의 인덱스
 
     void Awake()
     {
@@ -17,7 +17,24 @@ public class ShowItem : MonoBehaviour
         {
             //요구 내용 : 아이템 제작 완료 창 및 아이템을 획득 시킬 것
             //추가해야할 내용 : 경험치 증가 관련
-            PlayerData.AddItem(GameData.Getitems()[GameData.GetMusics().IndexOf(MyRythm.info.title)]);
+            for (int i = 0; i < GameData.CountMusic(); i++)
+            {
+                if (GameData.GetMusic(i).Equals(MyRythm.info.title))
+                {
+                    index = i;
+                    break;
+                }
+            }
+            PlayerData.AddItem(GameData.GetItem(index));
+
+            //Material 색 바꾸기
+            //https://m.blog.naver.com/PostView.nhn?blogId=wangkisa&logNo=173279215&proxyReferer=https%3A%2F%2Fwww.google.co.kr%2F
+            Texture itemTexture = Resources.Load("Item/" + GameData.GetItem(index), typeof(Texture)) as Texture;
+            Mesh itemMesh = Resources.Load("Item/" + GameData.GetItem(index), typeof(Mesh)) as Mesh;
+            //획득한 아이템을 보여줌
+            gameObject.GetComponent<MeshFilter>().mesh = itemMesh;
+            gameObject.GetComponent<Renderer>().material.mainTexture = itemTexture;
+
             CameraEffect.fade = false;
         }
     }
@@ -29,17 +46,7 @@ public class ShowItem : MonoBehaviour
 
         if (Scenes.Scenes.present == Scenes.Scene.ShowItem)
         {
-            //획득한 아이템을 보여줌
-            foreach (MeshFilter meshfilter in itemMesh)
-            {
-                if (meshfilter.name.Equals(GameData.Getitems()[GameData.GetMusics().IndexOf(RythmData.MyRythm.info.title)]))
-                {
-                    gameObject.GetComponent<MeshFilter>().mesh = meshfilter.mesh;
-                }
-            }
-
-            //시간을 멈춤
-            Time.timeScale = 0;
+            
         }
 
         if (CameraEffect.fade && CameraEffect.alph == 1)
@@ -61,9 +68,6 @@ public class ShowItem : MonoBehaviour
 
             if (GUI.Button(new Rect((Screen.width - btnwidth) / 2, (Screen.height - btnheight) / 2 + Screen.height / 2.5f, btnwidth, btnheight), "확인", Scenes.Scenes.GUIAlign("button", (int)btnwidth / 8)))
             {
-                //확인 버튼을 누르면 카메라를 리듬게임 시작 전으로 돌리고 태양위치를 원래대로 돌린후 시간을 동작
-                Time.timeScale = 1;
-
                 Scenes.Scenes.present = Scenes.Scene.InSmithy;
                 CameraEffect.fade = true;
             }

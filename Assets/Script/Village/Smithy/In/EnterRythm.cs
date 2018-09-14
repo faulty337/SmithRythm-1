@@ -88,7 +88,7 @@ public class EnterRythm : MonoBehaviour
             float btnWidth = Screen.width / 1.2f, btnHeight = Screen.height / 12f;
 
             //주석친 부분은 노래 선택시 스크롤이 버튼 클릭 방식을 쓸 경우 해제
-            scrollpos = GUI.BeginScrollView(new Rect((Screen.width - btnWidth) / 2, btnHeight, btnWidth, btnHeight * 10), scrollpos, new Rect(0, 0, 0, btnHeight * GameData.GetMusics().Count));
+            scrollpos = GUI.BeginScrollView(new Rect((Screen.width - btnWidth) / 2, btnHeight, btnWidth, btnHeight * 10), scrollpos, new Rect(0, 0, 0, btnHeight * GameData.CountMusic()));
             //if (startMusicIndex > 0 && GUI.Button(new Rect((Screen.width - btnWidth) / 2, 0, btnWidth, btnHeight), "▲")) startMusicIndex--;
 
             for (int i = 0; i <= PlayerData.Level; i++)
@@ -96,10 +96,10 @@ public class EnterRythm : MonoBehaviour
             {
                 //if (i >= GameData.GetMusics().Count) break;
                 //if (i > PlayerData.Level) break;
-                if (GUI.Button(new Rect(0, btnHeight * i, btnWidth, btnHeight), GameData.GetMusics()[i], Scenes.Scenes.GUIAlign("button", (int)btnWidth / 30)))
+                if (GUI.Button(new Rect(0, btnHeight * i, btnWidth, btnHeight), GameData.GetMusic(i), Scenes.Scenes.GUIAlign("button", (int)btnWidth / 30)))
                 //if (GUI.Button(new Rect((Screen.width - btnWidth) / 2, btnHeight * (i - startMusicIndex + 1), btnWidth, btnHeight), GameData.GetMusics()[i], btnStyle))
                 {
-                    RythmData.MyRythm.info.title = GameData.GetMusics()[i];
+                    RythmData.MyRythm.info.title = GameData.GetMusic(i);
 
                     CameraEffect.fade = true;
                 }
