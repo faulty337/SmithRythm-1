@@ -15,31 +15,28 @@ public class ShowItem : MonoBehaviour
         }
         else if (Scenes.Scenes.present == Scenes.Scene.ShowItem)
         {
+            //요구 내용 : 아이템 제작 완료 창 및 아이템을 획득 시킬 것
+            //추가해야할 내용 : 경험치 증가 관련
+            for (int i = 0; i < GameData.CountMusic(); i++)
+            {
+                if (GameData.GetMusic(i).Equals(MyRythm.info.title))
+                {
+                    index = i;
+                    break;
+                }
+            }
+            PlayerData.AddItem(GameData.GetItem(index));
+
+            //Material 색 바꾸기
+            //https://m.blog.naver.com/PostView.nhn?blogId=wangkisa&logNo=173279215&proxyReferer=https%3A%2F%2Fwww.google.co.kr%2F
+            Texture itemTexture = Resources.Load("Item/" + GameData.GetItem(index), typeof(Texture)) as Texture;
+            Mesh itemMesh = Resources.Load("Item/" + GameData.GetItem(index), typeof(Mesh)) as Mesh;
+            //획득한 아이템을 보여줌
+            gameObject.GetComponent<MeshFilter>().mesh = itemMesh;
+            gameObject.GetComponent<Renderer>().material.mainTexture = itemTexture;
+
             CameraEffect.fade = false;
         }
-    }
-
-    void Start()
-    {
-        //요구 내용 : 아이템 제작 완료 창 및 아이템을 획득 시킬 것
-        //추가해야할 내용 : 경험치 증가 관련
-        for (int i = 0; i < GameData.CountMusic(); i++)
-        {
-            if (GameData.GetMusic(i).Equals(MyRythm.info.title))
-            {
-                index = i;
-                break;
-            }
-        }
-        PlayerData.AddItem(GameData.GetItem(index));
-
-        //Material 색 바꾸기
-        //https://m.blog.naver.com/PostView.nhn?blogId=wangkisa&logNo=173279215&proxyReferer=https%3A%2F%2Fwww.google.co.kr%2F
-        Texture itemTexture = Resources.Load("Item/" + GameData.GetItem(index), typeof(Texture)) as Texture;
-        Mesh itemMesh = Resources.Load("Item/" + GameData.GetItem(index), typeof(Mesh)) as Mesh;
-        //획득한 아이템을 보여줌
-        gameObject.GetComponent<MeshFilter>().mesh = itemMesh;
-        gameObject.GetComponent<Renderer>().material.mainTexture = itemTexture;
     }
 
     // Update is called once per frame
