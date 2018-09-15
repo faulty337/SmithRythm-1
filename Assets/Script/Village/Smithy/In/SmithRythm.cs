@@ -24,6 +24,7 @@ public class SmithRythm : MonoBehaviour
     int circleIndex, bpmIndex; //터치 시 사라지는 인덱스와 bpm에 맞추어야하는 인덱스를 구분한다.
 
     GameObject[] circleNote; // 나오는 원들을 의미
+    public GameObject circleNoteEffect;
 
     float energy, endEnergy; //진행도
     int score; //게임 점수
@@ -33,7 +34,7 @@ public class SmithRythm : MonoBehaviour
     public AnimationClip hammer;
 
     public ParticleSystem hammerEffect;
-    
+
     void Awake()
     {
         if (Scenes.Scenes.present == Scenes.Scene.Initialization)
@@ -52,6 +53,7 @@ public class SmithRythm : MonoBehaviour
         endEnergy = 80;
         SmithAnimation.Play();
         hammerEffect.Stop();
+        circleNoteEffect.GetComponent<ParticleSystem>().Stop();
 
         //노트 파일 읽고 노트 생성
         MyRythm.ReadFile("NoteText/" + MyRythm.info.title);
@@ -105,8 +107,8 @@ public class SmithRythm : MonoBehaviour
 
                 if (circleIndex == circleNote.Length) return;
 
-                Judge temp = JudgeCircle(circleIndex, MULTISPEED / 4);
-                if (temp != Judge.Fail)
+                Judge tempJudge = JudgeCircle(circleIndex, MULTISPEED / 4);
+                if (tempJudge != Judge.Fail)
                 {
                     bool bTmp = false;
 
@@ -126,9 +128,13 @@ public class SmithRythm : MonoBehaviour
 
                     if (bTmp)
                     {
+                        GameObject temp = Instantiate(circleNoteEffect, circleNote[circleIndex].transform.position, circleNoteEffect.transform.rotation);
+                        temp.GetComponent<ParticleSystem>().Play();
+                        Destroy(temp, 0.5f);
+                        
                         //bpm을 맞추어야 하기 떄문에 표시를 없앰
                         circleNote[circleIndex++].GetComponent<Renderer>().enabled = false;
-                        score += (int)temp * ++combo;
+                        score += (int)tempJudge * ++combo;
                         
                         SmithAnimation.Play();
                         hammerEffect.Play();
@@ -265,14 +271,14 @@ public class SmithRythm : MonoBehaviour
 
     void MoveCircle(float time)
     {
+        //bpm / 60 * 업데이트 함수 호출시간
+        if (bpmIndex != 0) speed = MyRythm.data[bpmIndex - 1].bpm;
+        else speed = MyRythm.data[0].bpm;
+
+        speed *= 1f / 60 * time * MULTISPEED;
+
         for (int i = bpmIndex; i < circleNote.Length; i++)
         {
-            //bpm / 60 * 업데이트 함수 호출시간
-            if (bpmIndex != 0) speed = MyRythm.data[bpmIndex - 1].bpm;
-            else speed = MyRythm.data[0].bpm;
-
-            speed *= 1f / 60 * time * MULTISPEED;
-
             //이동
             Vector3 position = circleNote[i].transform.position;
             float x = position.x, y = position.y, z = position.z;
