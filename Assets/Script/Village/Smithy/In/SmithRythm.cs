@@ -33,7 +33,8 @@ public class SmithRythm : MonoBehaviour
     public AnimationClip hammer;
 
     public ParticleSystem hammerEffect;
-    
+    public ParticleSystem circleNoteEffect;
+
     void Awake()
     {
         if (Scenes.Scenes.present == Scenes.Scene.Initialization)
@@ -52,6 +53,7 @@ public class SmithRythm : MonoBehaviour
         endEnergy = 80;
         SmithAnimation.Play();
         hammerEffect.Stop();
+        circleNoteEffect.Stop();
 
         //노트 파일 읽고 노트 생성
         MyRythm.ReadFile("NoteText/" + MyRythm.info.title);
@@ -127,6 +129,10 @@ public class SmithRythm : MonoBehaviour
                     if (bTmp)
                     {
                         //bpm을 맞추어야 하기 떄문에 표시를 없앰
+                        GameObject temphammerEffect = GameObject.Find("CircleNote Effect");
+                        GameObject tempEffect = Instantiate(temphammerEffect, circleNote[circleIndex].transform.position, temphammerEffect.transform.rotation);
+                        tempEffect.GetComponent<ParticleSystem>().Play();
+                        Destroy(tempEffect, 0.5f);
                         circleNote[circleIndex++].GetComponent<Renderer>().enabled = false;
                         score += (int)temp * ++combo;
                         
@@ -265,14 +271,14 @@ public class SmithRythm : MonoBehaviour
 
     void MoveCircle(float time)
     {
+        if (bpmIndex != 0) speed = MyRythm.data[bpmIndex - 1].bpm;
+        else speed = MyRythm.data[0].bpm;
+
+        //bpm / 60 * 업데이트 함수 호출시간
+        speed *= 1f / 60 * time * MULTISPEED;
+
         for (int i = bpmIndex; i < circleNote.Length; i++)
         {
-            //bpm / 60 * 업데이트 함수 호출시간
-            if (bpmIndex != 0) speed = MyRythm.data[bpmIndex - 1].bpm;
-            else speed = MyRythm.data[0].bpm;
-
-            speed *= 1f / 60 * time * MULTISPEED;
-
             //이동
             Vector3 position = circleNote[i].transform.position;
             float x = position.x, y = position.y, z = position.z;

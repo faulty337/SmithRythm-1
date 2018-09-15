@@ -21,8 +21,12 @@ public class StartGame : MonoBehaviour
         else if (Scenes.Scenes.present == Scene.InVillage)
         {
             CameraEffect.fade = false;
-            GameObject.Find("Main Camera").transform.position = startPos;
         }
+    }
+
+    void Start()
+    {
+        GameObject.Find("Main Camera").transform.position = startPos;
     }
 
     // Update is called once per frame
