@@ -2,6 +2,7 @@
 using UnityEngine.SceneManagement;
 using RythmData;
 using CamaraEffect;
+using System.Collections.Generic;
 
 //http://itpangpang.xyz/177 - 유니티 마우스 관련 함수
 //https://blog.naver.com/live_for_dream/220883895920 - 유니티 화면 분할
@@ -23,7 +24,9 @@ public class SmithRythm : MonoBehaviour
     const float MULTISPEED = 20;
     int circleIndex, bpmIndex; //터치 시 사라지는 인덱스와 bpm에 맞추어야하는 인덱스를 구분한다.
 
+    GameObject circleOriginal;
     GameObject[] circleNote; // 나오는 원들을 의미
+    GameObject circleNoteSizeEffect;
     public GameObject circleNoteEffect;
 
     float energy, endEnergy; //진행도
@@ -59,14 +62,14 @@ public class SmithRythm : MonoBehaviour
         MyRythm.ReadFile("NoteText/" + MyRythm.info.title);
         circleNote = new GameObject[MyRythm.info.totalCount];
 
-        GameObject.Find("Circle Original").GetComponent<Renderer>().enabled = true;
-        GameObject original = GameObject.Find("Circle Original");
+        circleOriginal = GameObject.Find("Circle Original");
+        circleOriginal.GetComponent<Renderer>().enabled = true;
         for (int i = 0; i < MyRythm.info.totalCount; i++)
         {
-            circleNote[i] = Instantiate(original, new Vector3(MyRythm.data[i].x * MULTISPEED, original.transform.position.y, MyRythm.data[i].z * MULTISPEED), new Quaternion(0, 0, 0, 0), GameObject.Find("Game").transform);
+            circleNote[i] = Instantiate(circleOriginal, new Vector3(MyRythm.data[i].x * MULTISPEED, circleOriginal.transform.position.y, MyRythm.data[i].z * MULTISPEED), new Quaternion(0, 0, 0, 0), GameObject.Find("Game").transform);
             circleNote[i].name = MyRythm.data[i].way;
         }
-        GameObject.Find("Circle Original").GetComponent<Renderer>().enabled = false;
+        circleOriginal.GetComponent<Renderer>().enabled = false;
 
         //노래 생성
         anvilAudio = gameObject.AddComponent<AudioSource>();
@@ -100,15 +103,8 @@ public class SmithRythm : MonoBehaviour
             }
             else if (anvilAudio.isPlaying)
             {
-                if (!SmithAnimation.isPlaying)
-                {
-                    hammerEffect.Stop();
-                }
-
-                if (circleIndex == circleNote.Length) return;
-
                 Judge tempJudge = JudgeCircle(circleIndex, MULTISPEED / 4);
-                if (tempJudge != Judge.Fail)
+                if (circleIndex != circleNote.Length && tempJudge != Judge.Fail)
                 {
                     bool bTmp = false;
 
@@ -116,8 +112,7 @@ public class SmithRythm : MonoBehaviour
                     {
                         bTmp = true;
                     }
-
-                    if (Input.GetMouseButtonDown(0))
+                    else if (Input.GetMouseButtonDown(0))
                     {
                         GameObject target = GetClickedObject();
                         if (target != null && target.Equals(gameObject))
@@ -128,10 +123,10 @@ public class SmithRythm : MonoBehaviour
 
                     if (bTmp)
                     {
-                        GameObject temp = Instantiate(circleNoteEffect, circleNote[circleIndex].transform.position, circleNoteEffect.transform.rotation);
-                        temp.GetComponent<ParticleSystem>().Play();
-                        Destroy(temp, 0.5f);
-                        
+                        //첫번째 효과 - 확대
+                        circleNoteSizeEffect = Instantiate(circleNote[circleIndex], circleNote[circleIndex].transform.position, circleNote[circleIndex].transform.rotation);
+                        circleNoteSizeEffect.GetComponent<Animation>().Play();
+
                         //bpm을 맞추어야 하기 떄문에 표시를 없앰
                         circleNote[circleIndex++].GetComponent<Renderer>().enabled = false;
                         score += (int)tempJudge * ++combo;
@@ -139,6 +134,15 @@ public class SmithRythm : MonoBehaviour
                         SmithAnimation.Play();
                         hammerEffect.Play();
                     }
+                }
+
+                if (circleNoteSizeEffect != null && !circleNoteSizeEffect.GetComponent<Animation>().isPlaying)
+                {
+                    Destroy(circleNoteSizeEffect);
+                    //두번째 효과 - 불티가 튐
+                    GameObject temp = Instantiate(circleNoteEffect, circleNoteSizeEffect.transform.position, circleNoteEffect.transform.rotation);
+                    temp.GetComponent<ParticleSystem>().Play();
+                    Destroy(temp, 0.5f);
                 }
 
                 if (JudgeCircle(bpmIndex, 0) != Judge.Fail)
